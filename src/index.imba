@@ -561,6 +561,7 @@ tag app-root
 	prop name = "Genesis"
 	prop chapter = 0
 	prop verse = 0
+	prop showWholeChapter = false
 	def setBook book
 		ls.setItem('id', book.id)
 		ls.setItem('name', book.name)
@@ -571,6 +572,8 @@ tag app-root
 	def clear
 		ls.clear()
 		setDefault!
+	def wholeChapter
+		showWholeChapter = !showWholeChapter
 	def render
 		<self>
 			<button.button :click.clear> "clear"
@@ -594,12 +597,18 @@ tag app-root
 					<div.verses.button-container>
 						for verse in [0...books[ls.id].verses[ls.chapter]]
 							<button.button.vr :click.setVerse(verse)> verse + 1
-						<button:click.wholChapter>
+						<button.button :click.wholeChapter> "all"
 				<div.reader>
 					for verse in genesis
-						if verse.reference is "{ls.name} {(Number(ls.chapter)+1)}:{(Number(ls.verse)+1)}"
-							<h2> verse.reference
+						if showWholeChapter
+							<p#{verse.reference}> verse.reference
 							<h3> verse.text
+						elif verse.reference is "{ls.name} {(Number(ls.chapter)+1)}:{(Number(ls.verse)+1)}"
+							<p#{verse.reference}> verse.reference
+							<h3> verse.text
+							# TODO: Make Bible show whole chapter
+							# TODO: Make verse button scroll to verse in whole chapter
+							# TODO: Think how to make multi verse selection
 ### css
 :root {
 	--spacing: 10px;
